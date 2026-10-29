@@ -14,6 +14,12 @@ Reusable instruction set for one brainstorm round. The orchestrator passes in: *
 ## Output
 Write **only** idea cards to your output file, in the exact card format from `ideas.md`, using temporary IDs `<ROUND><AGENT>-NN` (e.g. `R2B-03`). No preamble. At the end, add one line: `Lens notes: <one sentence on what this lens surfaced or failed to surface>`.
 
+## Orchestrator loop
+1. Read the Status section in `ideas.md`.
+2. Spawn one fresh agent per lens for the round, in parallel. Each gets this file, its lens, a target of 8, and an output file `<scratch>/rounds/<ID>.md`.
+3. Read the outputs. Drop near-duplicates and fix flags, then run `python3 merge.py R<n> "<lenses>" "<note>" --drop <IDs> -- <files>`.
+4. Update Status, then commit and push. Repeat until the stop rule hits, then write the shortlist.
+
 ## Lens pool
 Each round gets distinct lenses, and fresh agents get lenses not used before.
 

@@ -3,6 +3,13 @@
 Single source list for the brainstorm. Agents add ideas; the orchestrator merges, dedupes, and shortlists.
 Instructions for round agents: [round-agent.md](round-agent.md).
 
+## Status (resume here)
+
+- **Now:** Round 2. L5 + L6 merged (I-025–I-040). L4 (local geography) is running; if its output is lost, rerun it.
+- **Next:** Round 3 (L7, L8, L9), Round 4 (L10, L11, L12), then the shortlist: top 3 ideas to test, each with a first silent test.
+- **Stop rule:** end rounds early if a round accepts <50% of proposals, or if L12 reports saturation.
+- **To resume:** open Claude Code on branch `claude/brainstorm-solo-income-repr78` and say *"Resume the brainstorm from solo-income/ideas.md Status."* The loop is in [round-agent.md](round-agent.md#orchestrator-loop).
+
 ## Brief (condensed)
 
 **Goal:** Financial independence from something people pay for, in places others haven't noticed. Be early: money already flows to a bad/outdated solution that AI + data recently made cheap to fix. Solo, start small, first dollar fast.
@@ -308,8 +315,196 @@ Instructions for round agents: [round-agent.md](round-agent.md).
 - Tags: customer=K-12 teachers running chess clubs · mechanism=curriculum digital download · resource=chess-coach skill + Lichess CC0 puzzles + game dev
 - Score (1-5): speed 3 · early 2 · fit 4 · ceiling 2
 
+**Round 2** (L5 moat · L6 AI shovels)
+
+### I-025 · Public-domain status evidence API for dataset builders
+- Money now flows to: AI dataset builders, PD reprint publishers and digital archives pay the Copyright Office's $200/hr records-search fee or rights-clearance firms per title, or check renewal volumes by hand. Most simply drop every post-1930 book. After the $1.5B Bartz v. Anthropic book settlement (2025, ~$3,000 per work), "provably public domain" became a budget line for anyone building a training corpus.
+- Why now: Registration records (NYPL's Catalog of Copyright Entries transcriptions), renewal records (Stanford Copyright Renewal Database) and HathiTrust's Hathifiles are free bulk data. LLM-assisted fuzzy matching now joins any title list against them for about a cent per title and logs the evidence. PD-only corpora (Harvard's Institutional Books, EleutherAI's Common Pile, both 2025) show the demand. On Jan 1, 2027 the US cutoff moves to 1931, so every existing PD list goes stale overnight.
+- Edge: Data-joining plus the versioned-catalog habit: each determination is dated and shows the queries run and the nearest non-matches. One determination can be sold to every buyer who asks about that title. Channels with no contact: a free sample on the Hugging Face Hub (where dataset builders search) and paid lookups as an Apify Store Actor (pay per result, also callable by AI agents through Apify's MCP server).
+- Silent test: Publish 20,000 determinations for 1929–63 US books (title, year, status, reason code, evidence links) as a free Hugging Face dataset, and list the Actor at $0.03 per title. Pass: ≥300 dataset downloads and ≥$150 Actor revenue within 45 days. Fail: <75 downloads, or $0 revenue after 60 days.
+- First $: $0.03 per lookup, $9 single-title evidence PDF (e.g., to answer a KDP public-domain query), $1,500 per 100k-title bulk run; ~21–35 days.
+- Flags: legal review. Sell evidence summaries with confidence levels, never legal opinions or warranties. Foreign works restored under URAA don't depend on renewal, so mark them "renewal test not applicable." Publish bibliographic metadata only, never text. Confirm reuse terms for each source dataset.
+- Unique: Closest is I-013, which uses HathiTrust's existing rulings to pick books to reprint. This sells the rights determination itself, extends it to titles HathiTrust never reviewed by matching registration and renewal records, and reaches dataset builders and agents through data/API marketplaces.
+- Tags: customer=AI dataset builders + PD publishers · mechanism=rights-evidence lookups sold per call and in bulk · resource=NYPL CCE + Stanford renewals + Hathifiles
+- Score (1-5): speed 3 · early 4 · fit 4 · ceiling 4
+
+### I-026 · GPL-free, human-calibrated chess AI kit for game developers
+- Money now flows to: Indie devs adding chess or chess-like modes buy $20–60 asset-store chess kits whose "easy" levels hang random pieces, or spend weeks writing their own minimax. They can't embed the strong engines in closed-source, console or App Store builds, because Stockfish, Fairy-Stockfish (the main variant engine) and Lc0 are all GPLv3.
+- Why now: Lichess's CC0 database (billions of rated games) shows how players at each rating actually go wrong: which pieces they hang, in which phase, under how much clock pressure. A small permissive engine can now be tuned to play like a real 800, 1200 or 1600 player rather than a crippled engine. Chess-like roguelikes (Shotgun King, Pawnbarian and their followers) created demand for custom pieces and boards. AI-assisted coding makes a compact engine with C# and GDScript bindings a few weeks' work.
+- Edge: The chess pipeline (python-chess + Stockfish) measures error rates by rating band and checks the calibration. Game-dev skill packages the engine for Unity and Godot. Sold where developers already search and buy without contact: itch.io, Fab and the Unity Asset Store.
+- Silent test: Pre-check: asset-store searches show no permissive engine with rating-calibrated, human-like levels (otherwise stop). List a $29 kit on itch.io and Fab (live at once) and on the Unity Asset Store (1–3 week review), with a free WebGL "beat the 1200 bot" demo. Pass: ≥10 paid in 45 days, or ≥2% demo-to-purchase. Fail: <3 paid with ≥500 demo plays.
+- First $: $29 kit (standard chess, human-like levels); $59 pro (fairy pieces, custom boards, hint/explain API); ~25–40 days.
+- Flags: The engine is written from scratch, with no GPL code or weights. Lichess data is CC0; no usernames appear in any output. Otherwise none.
+- Unique: Closest is I-014, which turns Lichess CC0 statistics into a trap guide for players. This sells licensable software to game developers and exploits a constraint no listed idea uses: GPL engines can't ship inside closed-source games.
+- Tags: customer=indie game developers · mechanism=permissively licensed SDK sold in asset stores · resource=Lichess CC0 + chess pipeline + game-dev skill
+- Score (1-5): speed 3 · early 3 · fit 5 · ceiling 2
+
+### I-027 · Plant-shipping law checker (Shopify app)
+- Money now flows to: Online nurseries and houseplant shops refund or reship parcels that state quarantines stop: citrus into CA/AZ/TX/FL, Japanese-beetle host plants into western states, soil-grown plants into Hawaii. Some unknowingly sell banned invasives (e.g., Ohio has banned Callery pear sales since 2023). Others pay staff to hand-key rules from 50 state PDFs, or pay $5–20/mo for generic shipping-rule apps that know nothing about plant law.
+- Why now: The National Plant Board's state-by-state law summaries and USDA APHIS Federal Orders are public but written as dense prose. An LLM can now turn them into a dated rules table (genus/species × state × condition) and diff it monthly. Shopify's checkout-validation Functions can block a restricted cart-and-address combination before payment. Spring shipping season opens in Feb–Mar.
+- Edge: Gardening and propagation knowledge maps cultivars to the regulated genera and pest hosts. The versioned-catalog method gives every rule a source, a "last verified" date and a changelog. Sold in the Shopify App Store, where merchants search and install with no contact; Shopify takes 0% of a developer's first $1M.
+- Silent test: Pre-check: App Store search for "plant shipping restrictions" returns no plant-law-specific app (otherwise stop). Launch a free plan (25 products) and a $12/mo plan (full catalog, checkout blocking, monthly rule-change email), plus a free public "Can I ship [genus] to [state]?" lookup. Pass: ≥40 installs and ≥5 paid within 60 days of approval. Fail: <10 installs.
+- First $: $12/mo after a 14-day trial; ~45–60 days (2–3 weeks to build, 1–2 weeks of review).
+- Flags: Advisory only: cite each source. It doesn't replace phytosanitary certificates or nursery licenses, and the merchant stays responsible. Small one-time Shopify developer registration fee (~$19).
+- Unique: Closest is I-017 (off-patent plant data for nurseries). This turns state quarantine and invasive-species law into a rules engine that acts at checkout. It differs in resource (plant-protection law, not patents) and mechanism (enforcement at the point of sale).
+- Tags: customer=online nurseries + plant shops · mechanism=checkout-embedded compliance app · resource=National Plant Board summaries + APHIS orders + gardening skill + catalog method
+- Score (1-5): speed 3 · early 4 · fit 4 · ceiling 3
+
+### I-028 · Blindfold Tactics: spoken chess puzzles for commuters
+- Money now flows to: Adult improvers pay $20–100 per Chessable course and $10–25 per tactics book. All of it needs a screen or a diagram, so commute, gym and dog-walk time goes unused, even though coaches prescribe visualization (blindfold) training. Chess shelves in audiobook stores hold biographies and narrated beginner books that only make sense with a board in front of you.
+- Why now: The Lichess puzzle database (CC0, ~5M rated, theme-tagged puzzles) can be filtered to positions with ≤7 pieces and one clear solution, which a listener can hold in their head. Free local TTS models or Google Play Books' free auto-narration bring a 4-hour volume's production cost to about $0. Spotify has accepted AI-narrated audiobooks via ElevenLabs since 2025. Improvement plans start in January.
+- Edge: Coach skill to grade difficulty, write spoken hints and set each pause as thinking time. The chess pipeline (Stockfish) verifies every solution is unique. Audio is a store category that diagram-bound competitors can't enter, and buyers reach it by searching "chess" in audiobook stores and podcast apps.
+- Silent test: Pre-check: <5 audio-native chess drill titles show up in Google Play and Spotify audiobook search. Publish Vol. 1 (300 puzzles rated 1200–1600, ~4 hrs) at $9.99 on Google Play Books and Spotify, with a free 10-puzzle podcast feed as the sampler. Pass: ≥25 paid units in 45 days. Fail: <8.
+- First $: $9.99 audiobook, followed by Vol. 2 (1600–2000) and an endgame volume; ~14–30 days.
+- Flags: Disclose AI narration wherever platforms require it; no Lichess branding. Otherwise none.
+- Unique: Closest is I-024 (CC0 puzzles turned into a teacher curriculum). This is a product built for listening, sold to adult improvers in audiobook and podcast stores, a channel that the book (I-014) and curriculum (I-024) formats can't serve.
+- Tags: customer=adult chess improvers · mechanism=audio-native training product · resource=Lichess CC0 puzzles + local TTS + coach skill
+- Score (1-5): speed 4 · early 4 · fit 5 · ceiling 2
+
+### I-029 · On-device AI redaction app for the Mac
+- Money now flows to: HR staff, school and township records clerks and small professional offices redact by hand in Acrobat Pro (~$20–30/mo per seat). Others pay per-page redaction vendors or cloud AI redaction tools that their own policies forbid them to upload records to. Public-records and document-request volumes keep rising.
+- Why now: Apple's Foundation Models framework (macOS 26, fall 2025) gives every Mac app a free on-device LLM, and Vision OCR runs locally too. Detecting names, SSNs, account numbers and addresses in scanned PDFs now costs $0 per page and nothing leaves the machine, which is the one claim cloud tools can't make.
+- Edge: The brief's local-AI experience; agent-instruction writing for reusable "redaction profiles" (e.g., an Ohio public-records preset for SSNs and account numbers); Claude Code for Swift. Sold through the Mac App Store, where buyers search "redact" and buy without contact.
+- Silent test: Pre-check: no on-device AI auto-detect redaction app in the Mac App Store has >100 ratings. List it free for 5 pages per document, with a $29.99 one-time unlock. Pass: ≥30 paid unlocks within 45 days of approval. Fail: <8 paid with ≥2,000 product-page views.
+- First $: $29.99 one-time (batch-folder Pro $59); ~25–40 days.
+- Flags: The Apple Developer Program costs $99/yr, an exception to the ~$0 budget. The app must strip text layers and metadata, not just draw boxes, require human review before export, and promise no completeness guarantee. Any preset that names HIPAA or FERPA needs legal review. Runs only on Apple-silicon Macs with Apple Intelligence.
+- Unique: Closest is I-008, which uses local models as a privacy edge when bidding on transcription work. This is a self-serve desktop app sold in an app store, for redaction, built on Apple's free on-device model, with no service delivery.
+- Tags: customer=privacy-bound office staff (HR, records clerks, small firms) · mechanism=on-device AI utility sold in an app store · resource=Apple Foundation Models + local AI + Claude Code
+- Score (1-5): speed 3 · early 3 · fit 3 · ceiling 3
+
+### I-030 · Federal Register → Jira rule-change tickets
+- Money now flows to: Compliance and operations leads at small regulated firms (food plants, motor carriers, chemical distributors, drone operators, alcohol producers) pay regulatory-intelligence services ($10k+/yr) or rely on law-firm client alerts. Otherwise a staffer reads the Federal Register every morning and keeps a spreadsheet of effective dates.
+- Why now: The Federal Register and Regulations.gov APIs are free and filter by CFR part. An LLM can now summarize each document, score "does this affect us?" against a company profile, and pull out effective and comment dates for pennies. Rule churn is unusually high: 2025's 10-for-1 deregulation order (EO 14192), mass rescissions and the FAR overhaul keep moving dates.
+- Edge: The versioned-catalog habit (a dated changelog per tracked CFR part) and AI text clustering to group related documents. Free FederalRegister.gov email alerts only notify; this triages and creates the work items. Atlassian handles trials, billing and licensing, so selling stays contact-free.
+- Silent test: Pre-check: Atlassian Marketplace search for "Federal Register" returns ≤3 apps (otherwise stop). List a Forge app: pick CFR parts and get one Jira issue per relevant document (summary, applicability score, dates as subtasks), with a 30-day trial. Pass: ≥25 trial installs and ≥3 paid conversions within 75 days of listing. Fail: <8 installs.
+- First $: ~$15–50/mo per site, tiered by user count; ~60–80 days (build, Marketplace approval, then the 30-day trial).
+- Flags: Information only, not legal advice; link every summary to the official document. Leave flagged domains (health, finance) out at launch, or put them through legal review first.
+- Unique: Closest is I-005 (a versioned requirements catalog for contractors). This watches federal rulemaking by CFR part and delivers it as tickets inside the buyer's work tracker, sold through an integration marketplace. It differs in resource (Federal Register API), mechanism (workflow-embedded alerts) and buyer.
+- Tags: customer=small regulated-business compliance leads · mechanism=workflow-embedded alert app · resource=Federal Register + Regulations.gov APIs + catalog method
+- Score (1-5): speed 2 · early 3 · fit 3 · ceiling 4
+
+### I-031 · Cited needs-statement data add-on for Google Docs
+- Money now flows to: Small nonprofits and freelance grant writers ($50–100/hr) spend 2–4 hours per application pulling poverty, income, unemployment and housing figures from data.census.gov for the statement of need, or pay for data-mapping subscriptions. AI grant-writing tools now draft these sections with plausible but unsourced numbers, which reviewers catch.
+- Why now: The Census API (ACS, SAIPE) and BLS LAUS are free. An add-on can insert a sourced table and a draft paragraph for any county, place, tract or school district in seconds, with every number tied to a table ID and vintage. The ACS 2021–2025 5-year release (scheduled for December 2026) makes every boilerplate's figures stale just before spring grant deadlines.
+- Edge: Public-data skill, plus agent-instruction writing for a citation-strict drafting spec (no number without a table ID and margin of error). Listed in the Google Workspace Marketplace, where nonprofits on free Google Workspace for Nonprofits find add-ons, with Word's AppSource as a second listing.
+- Silent test: Free tier (3 inserts/month) and a $12/mo or $79/yr unlock via a Stripe link. Pass: ≥150 installs and ≥8 paid within 60 days of Marketplace approval. Fail: <40 installs.
+- First $: $79/yr; ~30–50 days (build, then Marketplace and OAuth review).
+- Flags: Show ACS margins of error and never present estimates as exact counts. Request access to the current document only. No health-outcome data at launch. Otherwise none.
+- Unique: Closest is I-002 (compliance matrices for grant applicants). This supplies the proposal's data section, not its requirements, and differs in resource (Census/BLS APIs), mechanism (a cited-data insert tool inside the editor) and channel (an add-on marketplace).
+- Tags: customer=small nonprofits + freelance grant writers · mechanism=in-editor cited-data add-on · resource=Census ACS/SAIPE + BLS APIs
+- Score (1-5): speed 3 · early 3 · fit 3 · ceiling 3
+
+### I-032 · Title II-ready township & village website theme
+- Money now flows to: Small townships, villages, library boards and special districts pay gov-web platforms (CivicPlus/Granicus-class, ~$3k–15k setup plus annual fees) or local designers ($2k–10k) to rebuild sites. Some bought accessibility overlays, which the FTC's $1M accessiBe order (2025) discredited.
+- Why now: DOJ's Title II rule requires WCAG 2.1 AA by Apr 26, 2027 for entities under 50k population and all special districts, so rebuild decisions land in Jan–Mar budget meetings. Claude Code plus automated axe-core testing makes a fully tested accessible theme a ~3-week build. It would include a meeting archive (agenda, minutes, video), public notices, a records-request page and accessible-PDF guidance.
+- Edge: Local knowledge of what Ohio township sites need (trustees, fiscal officer, zoning, roads, cemeteries, Sunshine Law notices), plus the catalog habit for a clean meeting-archive data model. Sold where clerks' web designers already shop (ThemeForest's WordPress section), with a free WordPress.org version and a pro upsell. A footer credit shows it to neighboring clerks.
+- Silent test: Free lite theme on WordPress.org plus a $59 pro version on ThemeForest. Pass: ≥10 ThemeForest sales, or ≥150 WordPress.org active installs and ≥5 pro upgrades, within 60 days of approval. Fail: <3 sales.
+- First $: $59 pro license, or $149 with a starter-content pack; ~35–60 days (ThemeForest review takes 1–3 weeks, with a real chance of rejection).
+- Flags: Say "built and tested to WCAG 2.1 AA," never "ADA compliant," since content added later can break conformance. Confirm DOJ hasn't moved the date (same check as I-001).
+- Unique: Closest is I-001 (Title II minutes and agendas for small Ohio bodies). This sells a one-time site template nationally through theme marketplaces, not a per-meeting document subscription. It differs in mechanism (template product) and resource (WordPress/ThemeForest + axe-core).
+- Tags: customer=small local governments + their web designers · mechanism=accessible site template sold in theme marketplaces · resource=WordPress/ThemeForest + axe-core + Claude Code
+- Score (1-5): speed 2 · early 3 · fit 3 · ceiling 3
+
+### I-033 · Photo-to-placard lockout/tagout procedures for small plants
+- Money now flows to: Small manufacturers and machine shops pay safety consultants and LOTO-service vendors about $100–300 per machine. The money buys the machine-specific energy-control procedures that OSHA requires under 29 CFR 1910.147(c)(4). Shops that don't pay post one generic procedure and get cited. Lockout/tagout is in OSHA's top-10 most-cited standards every year, and a serious violation can cost up to about $16.5k (2025 maximum).
+- Why now: In the Economic Index, conversations matched to production tasks are well under 1% of usage, and so are installation/maintenance/repair tasks. Together these occupations hold about a tenth of US jobs. The people who own this paperwork are not using AI to write it. Vision models can now read nameplates and mark disconnects, valves and stored-energy points on phone photos. Claude then fills a fixed template: shut down, isolate, lock, release stored energy, verify.
+- Edge: Game-dev layout skills make the placards consistent and easy to read. Agent-instruction writing fixes the procedure spec and the QA checklist. A versioned catalog holds energy-source templates by machine type (press brake, CNC lathe, injection molder, compressor, conveyor, saw). Butler County's many small plants (Hamilton, Fairfield, West Chester, Middletown) are the first market for search pages.
+- Silent test: Pre-check: ≥15 SW Ohio Indeed postings from the last 90 days list writing LOTO procedures among EHS or maintenance duties. Then publish 25 pages titled "Lockout/tagout procedure for a [machine]: sample placard". Add an Etsy personalized listing and a Fiverr gig where the buyer uploads 4–8 machine-only photos and fills in a form. Pass: ≥4 paid machines, or one order of ≥10 machines, within 45 days. Fail: 0 paid after ≥400 combined visits and impressions.
+- First $: $39 per machine, or $290 for a 10-pack. Each order gets a one-page color placard (PDF + editable DOCX) with numbered photo callouts, plus an equipment list and an annual periodic-inspection checklist, within 48h; ~20–40 days.
+- Flags: Safety-critical. Deliver each placard as a draft that the employer's authorized employee must check on the machine, and require a checkbox confirming it. Never claim "OSHA compliant". Get legal review of the liability terms, and consider E&O insurance before scaling. Accept machine-only photos, with no faces.
+- Unique: Nearest is I-006, which checks a buyer's own label artwork against rules. This writes a new safety procedure from the buyer's machine photos, under a different rule (OSHA 1910.147), for a different buyer (plant and maintenance managers).
+- Tags: customer=small manufacturers/maintenance managers · mechanism=photo-to-compliance-document per-unit service · resource=vision AI + OSHA 1910.147 + Index/Indeed occupation gap
+- Score (1-5): speed 3 · early 4 · fit 3 · ceiling 4
+
+### I-034 · Forklift-battery Tier II packets (the hidden sulfuric-acid trigger)
+- Money now flows to: Warehouses, distribution centers (DCs) and plants with electric forklift fleets pay EHS consultants about $300–1,500 per facility for the EPCRA §312 Tier II chemical inventory due every March 1, or never file it. Most don't know that sulfuric acid in lead-acid forklift batteries is an Extremely Hazardous Substance with a 500-lb reporting threshold. An industrial battery holds roughly 100–300 lb of acid, so a handful of batteries crosses that threshold, counting spares. About 8 or more batteries also cross the 10,000-lb threshold for lead. EPCRA penalties can reach five figures per day.
+- Why now: Transportation/material-moving and production tasks barely show up in the Economic Index, so operations managers are not using AI to read safety data sheets (SDSs). Vision models now reliably pull CAS numbers, weight percentages and GHS hazard classes from battery, propane and fuel SDS PDFs. What remains is arithmetic. The filing window runs Jan 1 to Mar 1, 2027. The I-75 corridor through Butler County (West Chester, Monroe, Fairfield) is full of exactly these buildings.
+- Edge: Calculator and spreadsheet skills from the budgeting app. A versioned catalog of battery models (weight, electrolyte %, acid %) built from public manufacturer SDSs. Monitoring of the Federal Register and EPA guidance. Local logistics geography for the first search pages.
+- Silent test: By Dec 15, publish a free "Do your forklift batteries trigger Tier II?" calculator. The user enters battery count plus model or weight and sees pounds of sulfuric acid and lead against the thresholds. A $99 filing packet is the upsell. Pass: ≥150 calculator runs and ≥5 paid packets by Mar 1, 2027. Fail: <2 paid with ≥150 runs (no willingness to pay), or <40 runs (channel dead).
+- First $: $99 for the first facility, $49 for each additional one. The packet holds a threshold worksheet with SDS citations; Tier II chemical entries (CAS numbers, hazard categories, amount range codes, storage types and locations) ready to type into EPA's Tier2 Submit or the state portal; and a state checklist (Ohio portal and fees). ~30–60 days.
+- Flags: Light legal review. Sell it as a compliance aid, not legal advice; the facility owner certifies the filing. Verify EPA's current guidance on batteries and each state's portal and fees. Use public SDSs only.
+- Unique: Nearest is I-004, an alert subscription for Ohio commercial and industrial facilities. This is a one-time threshold check and filing packet tied to a yearly deadline, under a different law (EPCRA §312). It is built by extracting data from SDSs and sold to warehouse operators.
+- Tags: customer=warehouse/DC & plant operators · mechanism=free threshold calculator → paid filing packet · resource=EPCRA §312 + manufacturer SDSs + vision extraction
+- Score (1-5): speed 3 · early 4 · fit 3 · ceiling 3
+
+### I-035 · WH-347 builder with wage-determination check for first-time public-works subs
+- Money now flows to: Small subcontractors (concrete, electrical, paving, sewer) on federally funded and Ohio prevailing-wage jobs pay for certified payroll. They buy add-ons from payroll providers or use specialty services, often about $25–75 per weekly report. The alternative is 2–4 office hours per job per week on Form WH-347. A wrong classification or fringe rate means withheld payments and back-wage findings.
+- Why now: IIJA money keeps pulling small local firms onto their first Davis-Bacon jobs (roads, water, sewer) through 2027. DOL's 2023 Davis-Bacon rule, the first major overhaul in about 40 years, tightened the rules on classification and withholding. Construction & extraction tasks are among the least represented in the Economic Index, so these offices are not building their own automations. Claude can now read the wage-determination (WD) text on SAM.gov and pre-map thousands of job titles to WD classifications, which is the step that takes the most office time.
+- Edge: The budgeting app's CSV import and mapping logic, rebuilt in Google Sheets + Apps Script. It runs in the buyer's own Drive, so no worker data ever reaches us. A title-to-classification synonym table built with AI-tagged clustering ships with the sheet, so it needs no AI calls at runtime. Ohio prevailing-wage rate tables are a second mode.
+- Silent test: Etsy and Gumroad listings, plus a free "is this rate compliant?" page, targeting "WH-347 excel," "certified payroll template" and "Davis-Bacon rate check". Pass: ≥8 sales in 45 days. Fail: <3.
+- First $: $49/yr per company. The buyer imports a payroll CSV (QuickBooks, Gusto or ADP export) and confirms the suggested classifications. The sheet checks base pay, fringe and overtime against the pasted WD, then outputs a print-ready weekly WH-347 and Statement of Compliance; ~15–30 days.
+- Flags: legal review (wage-and-hour law). The sheet organizes and checks only; the contractor signs and certifies. Verify that it matches the current WH-347 version and Ohio's prevailing-wage thresholds.
+- Unique: Nearest is I-023, a budgeting-app spreadsheet for Etsy sellers' year-end books. This checks payroll against federal and state wage determinations and produces a mandated weekly federal form for public-works subcontractors. It uses a different resource (SAM.gov WDs) and exploits a different constraint (Davis-Bacon and Ohio prevailing wage).
+- Tags: customer=small public-works subcontractors · mechanism=self-run compliance spreadsheet (rate check + mandated form) · resource=SAM.gov wage determinations + budgeting-app importer + AI-built classification table
+- Score (1-5): speed 4 · early 3 · fit 4 · ceiling 3
+
+### I-036 · First-edition 2027 water-quality reports (CCRs) for small water systems
+- Money now flows to: About 50,000 US community water systems must deliver a Consumer Confidence Report (CCR) by July 1 each year. Most serve fewer than 3,300 people: villages, mobile-home parks, HOAs, rural schools. Small systems pay engineering or consulting firms about $500–2,500 per report, or a part-time licensed operator puts it together from state templates.
+- Why now: EPA's 2024 CCR Rule Revisions take effect Jan 1, 2027, so reports due July 1, 2027 are the first that must include the new elements:
+  - a plain-language summary at the top;
+  - narratives on corrective actions for violations;
+  - how to access the lead service line inventory;
+  - translation, or translation assistance, where ≥10% or ≥1,000 residents share a language and have limited English.
+  Systems serving ≥10,000 people also move to two reports a year. Drafting and translation are cheap for AI now, while water-operator tasks barely show up in the Economic Index.
+- Edge: Each system's monitoring results and violations are public in state SDWIS portals (Ohio EPA's Drinking Water Watch), so a draft needs no client data. Census ACS language tables decide whether translation is required. A Claude Code pipeline inserts the fixed regulatory health-effects wording. Federal Register monitoring catches rule changes. Village buyers overlap with I-001, which allows cross-selling.
+- Silent test: Publish a "What changes in your 2027 CCR" page and a free translation-trigger checker (enter a place, see ACS limited-English shares against the 10%/1,000 test). Add a $149 order form for a draft built from the system's public data. Pass: ≥60 checker uses and ≥3 paid orders by Apr 30, 2027. Fail: 0 paid after ≥300 visits.
+- First $: $149 per draft CCR (English plus required translations, as a print-ready PDF and accessible HTML). Systems serving ≥10k can add the second yearly report for $99. ~90–150 days, since buying peaks Mar–Jun.
+- Flags: Light legal review. The owner or operator reviews the report and certifies it to the state. Verify the state-adopted version of the rule and any EPA delay. Pay a native-speaker reviewer to check translations before the first sale (small cost). Pull each system's public data only when it orders, with no bulk scraping.
+- Unique: Nearest is I-001, minutes and accessible PDFs for small public bodies. This drafts a different mandated document (40 CFR 141 Subpart O) from public monitoring data and ACS language data. Its buyers also include private systems (parks, HOAs, schools).
+- Tags: customer=small community water systems & contract operators · mechanism=public-data-built regulatory report + AI translation · resource=SDWIS monitoring data + ACS language data + 2024 CCR revisions
+- Score (1-5): speed 2 · early 4 · fit 3 · ceiling 3
+
+### I-037 · TechCred-reimbursed "Applied AI for Plant Technicians" credential
+- Money now flows to: Ohio's TechCred program reimburses employers up to $2,000 per credential, and up to $30,000 per round, for short tech credentials. The employer pays the provider up front and the state reimburses it when the employee finishes. Most of this money goes to colleges and national vendors for IT, CNC, PLC, Six Sigma and generic office-AI courses. Almost none of it buys AI training built for plant-floor roles.
+- Why now: On the Economic Index state map, Ohio's per-capita Claude usage is below the US average, and production, maintenance and logistics tasks barely show up. The gap is both regional and occupational, and the state already pays to close tech-skill gaps. With Claude, building a course for one role, with practical assessments, takes 3–4 weeks.
+- Edge: Ohio location: only Ohio employers can claim TechCred. Agent-instruction writing becomes the curriculum: turning a manual into a PM checklist, writing work instructions, analyzing downtime logs. Lynda.com, through the Lane card, is used to benchmark competing AI courses. Game-dev skills build scenario-based assessments. A module on decisions AI must not make (lockout, energy isolation) sets the course apart.
+- Silent test: Pre-check:
+  - The current Index release shows Ohio's usage index below 1.0.
+  - The public TechCred site shows the program is funded and accepts credentials submitted by providers.
+  - ≤3 approved AI credentials target production or maintenance roles.
+  Then submit the credential and publish a landing page with the syllabus, a sample module and the price. Pass: approved within 2 rounds, and ≥5 seats sold in the first round after approval. Fail: rejected twice, or 0 seats after one full round.
+- First $: $450 per seat for 10 hours self-paced, a practical assessment and a verifiable credential page; ~75–120 days.
+- Flags: Follow TechCred's provider and credential rules exactly. Make no outcome guarantees. Learners practice on synthetic manuals and logs, so no confidential employer data reaches us.
+- Unique: Nearest is I-024, a curriculum download sold to teachers. This is a workforce credential that Ohio employers buy and the state reimburses. The money source, the buyer and the constraint all differ: an Ohio-only program for a region and occupations that lag in AI use.
+- Tags: customer=Ohio manufacturers & logistics employers · mechanism=state-reimbursed workforce credential · resource=TechCred + Claude-built course + Index region/occupation gap
+- Score (1-5): speed 1 · early 4 · fit 3 · ceiling 4
+
+### I-038 · Accessible-math conversion for STEM course materials
+- Money now flows to: Public universities and colleges pay vendors to fix PDFs for accessibility at about $3–15 per page. Equation-heavy files cost more, or the vendor won't take them. The schools also fund accessibility offices with long backlogs, while STEM faculty retype equations by hand in LMS editors. Notes that are scanned, handwritten or compiled from LaTeX usually show equations as images, which fails WCAG 2.1 AA.
+- Why now: DOJ's Title II web rule set a deadline of Apr 24, 2026 for public entities serving ≥50k people, which includes state universities. Smaller entities have until Apr 26, 2027. Large institutions are therefore already past due. Educational instruction and science are among the fastest-growing Economic Index categories, so faculty already draft with AI. The math work is still manual: converting equations to LaTeX and then MathML, writing alt text for plots, adding structure, and validating. Vision models now transcribe handwritten and scanned equations well, and Pandoc/LaTeXML output MathML for free.
+- Edge: A Claude Code pipeline with a local-model option. The validation stack (axe, PAC, and a read-through with NVDA + MathCAT) is shared with I-001's tooling.
+- Silent test: Landing page with a free 2-page demo upload, targeting "make math PDF accessible," "handwritten notes accessible" and "MathML Canvas". Pass: ≥3 paid orders (≥150 pages total) within 45 days. Fail: 0 paid after ≥30 demos.
+- First $: $4 per page for scanned or handwritten notes, $1.50 per page for born-digital LaTeX. Delivery in 72h: LMS-ready HTML with MathML, a tagged PDF and figure descriptions. A course packet runs about $200–600; ~20–40 days.
+- Flags: Sell "WCAG 2.1 AA conformance checks," never legal compliance. Convert only material the buyer wrote or holds rights to (no publisher textbooks). Accept no student work or grades (FERPA). Confirm DOJ hasn't moved the Title II dates.
+- Unique: Nearest is I-001, which applies the same DOJ rule to minutes and PDFs for small public bodies. This sells per-page conversion to STEM faculty and uses a different resource (vision math OCR → LaTeX → MathML). It targets the ≥50k cohort that is already past due.
+- Tags: customer=STEM faculty & departments at public colleges · mechanism=per-page accessibility conversion · resource=vision math OCR + Pandoc/LaTeXML + Title II rule
+- Score (1-5): speed 3 · early 4 · fit 3 · ceiling 3
+
+### I-039 · Brief citation & quotation verifier for small-firm litigators
+- Money now flows to: Big firms pay for Westlaw/Lexis brief-analysis add-ins. Solo and small firms spend associate or paralegal hours checking citations, or skip it. Since Mata v. Avianca (2023), courts have sanctioned lawyers in hundreds of cases over AI-invented citations. Penalties have included fines from about $1k to over $30k, disqualification and referral to the bar. More judges now require lawyers to certify how they used AI.
+- Why now: Legal tasks are a small but growing share of Economic Index conversations, and each error costs more there than anywhere else. Free Law Project's CourtListener now holds the Caselaw Access Project's full run of US reporters. It offers opinion text and a citation-lookup API, and its open-source eyecite parser pulls citations out of text. Checking that a case exists is now nearly free. What nobody checks yet is whether the case name matches the citation, whether the pin cite falls inside the opinion, and whether quoted language actually appears in it.
+- Edge: Claude Code connects eyecite, CourtListener and fuzzy quote matching into a one-upload report. Agent-instruction writing enforces a strict spec: flag problems, never give an opinion. No legal-database license is needed.
+- Silent test: A free 10-citation check plus a $9 full report per brief, targeting "fake case citation checker" and "verify citations in brief". Pass: ≥100 free checks and ≥5 paid briefs in 45 days. Fail: <2 paid with ≥100 free checks (no willingness to pay), or <30 free checks (channel dead).
+- First $: $9 per brief (up to 75 citations). Each citation gets red, amber or green: not found, name mismatch, pin cite outside the opinion, or quote not found. The report includes an exportable verification log. $29/mo for unlimited briefs; ~25–40 days.
+- Flags: legal review (close to legal services; client confidentiality). It is not a citator and makes no claim that a case is still good law. Uploads are processed in memory, deleted after the report, and never used for training. Confirm CourtListener's API terms and rate limits allow commercial volume.
+- Unique: Nearest is I-022, where AI personas critique a rulebook. This checks a court filing against an open case-law database with deterministic rules, for litigators. The resource (CourtListener/CAP + eyecite), buyer and mechanism all differ.
+- Tags: customer=solo/small-firm litigators · mechanism=registry-backed verification report · resource=CourtListener + Caselaw Access Project + eyecite + Claude
+- Score (1-5): speed 3 · early 3 · fit 3 · ceiling 4
+
+### I-040 · "Can your AI agent answer this?" readiness audit for Shopify stores
+- Money now flows to: Shopify merchants pay AI support agents (Intercom Fin or Gorgias class) about $1 per resolved conversation, or a plan fee. They pay freelancers and agencies $300–2,000 to write help-center content. They also absorb refunds and chargebacks when the agent guesses at a policy the store never wrote down, such as returns on sale items, international shipping, warranty or order changes.
+- Why now: The Economic Index's Sep 2025 analysis of enterprise use found that API use leans heavily toward automation. It also found that complex deployments are held back more by getting the right context to the model than by price. Merchants turn agents on for holiday volume and January returns. Claude can generate the questions a store's customers will ask from the store's own products and policies, then test whether the published content answers each one.
+- Edge: The eval method from the agent-instruction builder (test prompts with expected outputs), built with Claude Code. Read-only access to the store's own products, pages and policies means the app never touches customer data, which avoids Shopify's review for that data. The exported eval CSV works with any vendor's agent.
+- Silent test: Shopify App Store listing with a free 20-question scan. Pass: ≥50 installs and ≥5 paid within 60 days of approval. Fail: <15 installs (channel dead), or 0 paid after ≥50 installs.
+- First $: $49 one-time full audit: 150 generated questions, each scored as answered, ambiguous or missing; draft policy and FAQ text for the merchant to approve; and an eval CSV. Or $19/mo to re-scan when the catalog or policies change. ~45–75 days, covering the build and app review.
+- Flags: Store content only, with no customer or order data. The merchant approves every policy text; never invent terms on their behalf. Disclose that the text is AI-generated.
+- Unique: Nearest is I-019, a service that ports agent instructions. This is a self-serve app-store product that scores a merchant's own content against generated customer questions. The buyer (e-commerce merchants), channel (app store) and mechanism (gap scoring plus eval export) all differ.
+- Tags: customer=Shopify merchants deploying AI support agents · mechanism=app-store content-gap audit + eval-set generator · resource=Claude + Shopify Admin API (own-store data) + agent-eval method
+- Score (1-5): speed 2 · early 4 · fit 3 · ceiling 4
+
 ## Round log
 
 | Round | Lenses | Proposed | Accepted | Note |
 |---|---|---|---|---|
 | 1 | L1 stale flows · L2 free assets · L3 skills | 24 | 24 | All distinct; Sanborn used twice for different buyers |
+| 2 | L5 moat · L6 AI shovels | 16 | 16 | All distinct; Title II now anchors I-001, I-032, I-038 |
