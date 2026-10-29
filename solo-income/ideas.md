@@ -5,8 +5,8 @@ Instructions for round agents: [round-agent.md](round-agent.md).
 
 ## Status (resume here)
 
-- **Now:** Round 2. L5 + L6 merged (I-025–I-040). L4 (local geography) is running; if its output is lost, rerun it.
-- **Next:** Round 3 (L7, L8, L9), Round 4 (L10, L11, L12), then the shortlist: top 3 ideas to test, each with a first silent test.
+- **Now:** Round 3 (L7, L8, L9) running. Rounds 1–2 merged: I-001–I-048.
+- **Next:** Round 4 (L10, L11, L12), then the shortlist: top 3 ideas to test, each with a first silent test.
 - **Stop rule:** end rounds early if a round accepts <50% of proposals, or if L12 reports saturation.
 - **To resume:** open Claude Code on branch `claude/brainstorm-solo-income-repr78` and say *"Resume the brainstorm from solo-income/ideas.md Status."* The loop is in [round-agent.md](round-agent.md#orchestrator-loop).
 
@@ -502,9 +502,100 @@ Instructions for round agents: [round-agent.md](round-agent.md).
 - Tags: customer=Shopify merchants deploying AI support agents · mechanism=app-store content-gap audit + eval-set generator · resource=Claude + Shopify Admin API (own-store data) + agent-eval method
 - Score (1-5): speed 2 · early 4 · fit 3 · ceiling 4
 
+**Round 2** (L4 local geography)
+
+### I-041 · Township hybrid-worker city-tax refund kit
+- Money now flows to: Hybrid workers living in SW Ohio townships pay city income tax on days they work from home. Townships levy no municipal income tax (outside JEDD areas); these residents live in West Chester, Liberty and Fairfield Twp in Butler; Green, Colerain, Anderson and Delhi in Hamilton; Deerfield in Warren; and Washington and Miami in Montgomery. Employers still withhold 1–2.5% for the office city (Cincinnati 1.8%, Dayton 2.5%, Blue Ash, Mason, Sharonville) on every day, including home days. Getting it back takes that city's own refund form, a day log and an employer-signed statement. Most never file, or they pay preparers $50–150 extra per city return.
+- Why now: Ohio taxes wages where the work is done. HB 197's COVID-era rule ended after 2021, and Schaad v. Alder (2024) settled 2020. Refunds can go back 3 years, so tax-year 2023 claims expire around Apr 15, 2027, and the 2027 season is the last one that can claim four years (2023–26) at once. Census TIGER place boundaries answer "city or township?" for any address. AI turns a calendar export or badge history into a dated day log and fills each city's form.
+- Edge: Here the local geography is the product. Roughly 600–700k people live in township areas of Butler, Hamilton, Warren and Montgomery counties, and many commute into income-tax cities. The versioned-catalog method keeps one record per city: administrator (RITA, CCA or self-administered), form, employer-signature rule and deadline.
+- Silent test: Free "Do I owe city tax on my home-office days?" address checker + refund estimator, with a $29 kit. Pass: ≥15 paid kits by Apr 15, 2027 with ≥1,000 checker uses. Fail: <4 paid.
+- First $: $29 kit for one work city and up to four tax years: day-log builder, pre-filled refund forms, employer-letter template, mailing checklist. ~30–60 days, since 2023–25 claims can be filed now.
+- Flags: legal review (tax). This is a forms organizer, not tax advice or return preparation. Warn residents of income-tax cities that the resident-city credit can wipe out the gain. The address check runs only on the buyer's own address and stores nothing.
+- Unique: Closest is I-023 (Etsy seller tax-season sheet). This one differs in customer (W-2 hybrid workers in townships), resource (Ohio municipal income-tax law + city/township boundary data) and mechanism (recovering over-withheld tax before a dated lookback deadline).
+- Tags: customer=SW Ohio hybrid workers living in townships · mechanism=refund-recovery kit with lookback deadline · resource=Ohio muni-tax rules + Census place boundaries + catalog method
+- Score (1-5): speed 3 · early 4 · fit 4 · ceiling 3
+
+### I-042 · Board of Revision value-challenge kit for the 2026 update
+- Money now flows to: Homeowners and small landlords who think the auditor's new value is too high either pay the higher tax or hire help to file a Board of Revision complaint (DTE Form 1), which can only be filed Jan 1–Mar 31. Tax-appeal firms work on contingency (often 25–50% of first-year savings); appraisers charge $350–600.
+- Why now: Butler and several neighboring counties set new values for tax year 2026 in the triennial update after their 2023 reappraisal (confirm in the pre-check). Owners can generally file only once per three-year cycle, so the cycle's first year is the time to file. HB 126 (2024) sharply limited school boards' value complaints and appeals, which lowers owners' risk. County auditors publish sales and appraisal files, so a script can compute each auditor neighborhood's median value-to-sale ratio, the core evidence a hearing weighs.
+- Edge: Local geography plus data-joining: sales-ratio tables by neighborhood for Butler, Hamilton, Warren and Montgomery. Bayesian shrinkage (from the brief's methods) keeps thin-sample neighborhoods from looking over-assessed by chance.
+- Silent test: Pre-check: ≥2 of the 4 counties issued new TY2026 values and offer sales data as an official download (no scraping); otherwise stop. By Jan 2, publish free "Is your neighborhood over-assessed? 2025–26 sales vs 2026 values" pages with a $29 parcel kit. Pass: ≥20 paid kits by Mar 31, 2027. Fail: <5 paid with ≥1,500 visits.
+- First $: $29 kit for the buyer's own parcel: neighborhood ratio, 5 arm's-length comps by parcel number, DTE Form 1 walkthrough, evidence and hearing checklist. $99 for up to 10 parcels for small landlords. ~45–75 days (the window opens Jan 1).
+- Flags: legal review (property tax). Ohio limits who may file for someone else, so owners file their own complaint, and the kit is not legal advice. No owner names anywhere: public pages show only neighborhood aggregates, and comps appear only in the buyer's own report.
+- Unique: Closest is I-003 (aggregated SW Ohio public price data). This one differs in resource (auditor sales and appraisal files, not bid tabs), customer (property owners) and mechanism (evidence kit timed to a dated annual appeal window).
+- Tags: customer=SW Ohio homeowners + small landlords · mechanism=seasonal appeal-evidence kit · resource=county auditor sales/appraisal data + Bayesian methods
+- Score (1-5): speed 3 · early 3 · fit 4 · ceiling 3
+
+### I-043 · CAUV-qualifying nursery plan for 3–9.9 acre owners
+- Money now flows to: Owners of 3–9.9 acre exurban parcels in Butler, Warren, Preble and Clermont pay property tax at full market value on their open acres. CAUV, Ohio's farm-use valuation, often values land 85–95% below market, but parcels under 10 acres qualify only if they gross an average $2,500/yr from commercial agriculture. The usual route, leasing the ground to a hay or row-crop farmer, rarely works on small, broken-up acreage. On ~6 open acres that means ~$1.5–2.5k/yr in savings left unclaimed.
+- Why now: The 2026 value update raised the land portion of these bills. CAUV applications (DTE 109, $25) are due at the county auditor by the first Monday in March (Mar 1, 2027). Nursery stock counts as commercial agriculture, and a small propagation bed of fast-rooting hardwood cuttings (elderberry, ninebark, red-twig dogwood, willow, native shrubs) can gross $2,500 on a fraction of an acre. Web Soil Survey plus the state's CAUV soil tables make a per-parcel savings estimate automatic.
+- Edge: The propagation skill supplies realistic yields per bed and timing, alongside the garden catalog and Fermi sizing. Local knowledge of western Butler's exurban townships (Ross, Hanover, Milford, Reily, Morgan) helps. Wooded parcels of ≥10 acres get the Ohio Forest Tax Law route instead.
+- Silent test: Free "CAUV savings estimate" page (acres, soils from Web Soil Survey, county rates), with a $39 playbook. Pass: ≥10 paid by Mar 1, 2027 with ≥800 estimator uses. Fail: <3 paid.
+- First $: $39 PDF + sheet: eligibility checklist, a 3-year propagation income plan (plants, bed sizes, wholesale-to-garden-center channel), records and receipts kit, DTE 109 walkthrough, recoupment warning. ~30–60 days.
+- Flags: legal review (tax). The auditor decides eligibility; warn clearly about the "exclusively commercial agriculture" requirement, the homesite carve-out, and recoupment if the land later leaves CAUV. Selling nursery stock requires an ODA nursery license, so the plan includes getting one.
+- Unique: Closest is I-017 (off-patent plant list for propagators). This one differs in customer (small-acreage landowners), mechanism (a micro-farm plan that qualifies the land for a tax valuation) and constraint exploited (Ohio's under-10-acre CAUV income test).
+- Tags: customer=SW Ohio small-acreage landowners · mechanism=tax-qualification playbook · resource=Ohio CAUV rules + Web Soil Survey + propagation skill
+- Score (1-5): speed 3 · early 4 · fit 4 · ceiling 2
+
+### I-044 · Great Miami corridor flood-zone exit screener (LOMA)
+- Money now flows to: Homeowners with federally backed mortgages in FEMA flood zones along the Great Miami River (Hamilton, Middletown, Fairfield, Miamisburg, West Carrollton, Dayton), Mill Creek and the Ohio River must carry flood insurance. Risk Rating 2.0 raises those premiums every year until they reach full-risk rates. Owners whose ground actually sits above the base flood elevation (BFE) can file a free FEMA LOMA to be removed from the zone. Today they either pay a surveyor $400–900 for an elevation certificate without knowing their odds, or pay a LOMA consultant $1–2.5k.
+- Why now: Ohio's statewide LiDAR and USGS 3DEP give sub-meter ground elevations. FEMA's NFHL publishes BFEs and zone lines, and open building footprints locate each house. A script can compare the ground around a footprint with the BFE in seconds. OpenFEMA's anonymized policy data shows where premiums concentrate.
+- Edge: Local geography: river towns protected by levees and the conservancy district, with mapped zones that cut through old neighborhoods. The game-dev 3D/geometry skill and a Claude Code GIS pipeline run at $0 on open data.
+- Silent test: Pre-check: screen all Butler County flood-zone footprints, and continue only if ≥10% have lowest ground ≥1 ft above the BFE. Then launch a free "Is your house really in the flood zone?" lookup with a $39 screening report. Pass: ≥8 paid in 60 days with ≥600 lookups. Fail: <2 paid.
+- First $: $39 report: LiDAR ground vs BFE around the footprint, LOMA odds, MT-EZ walkthrough, what the surveyor must certify, lender-waiver letter template. ~30–60 days.
+- Flags: Screening only, not a survey or engineering opinion; a licensed surveyor or engineer certifies. A lender may still require coverage, so recommend keeping voluntary coverage. Lookups use only the buyer's own address; no owner names or policy-level data.
+- Unique: Closest is I-007 (per-site report from public maps). This one differs in resource (current LiDAR and FEMA NFHL data, not historical maps), customer (homeowners, not environmental consultants) and mechanism (screening for a free federal remedy that ends a recurring premium).
+- Tags: customer=flood-zone homeowners in SW Ohio river towns · mechanism=geodata screening report → free federal remedy · resource=Ohio LiDAR/3DEP + FEMA NFHL + open building footprints
+- Score (1-5): speed 2 · early 3 · fit 3 · ceiling 4
+
+### I-045 · Ohio local-government spend intel for B2G vendors
+- Money now flows to: Small vendors that sell to Ohio cities, townships, schools and libraries (IT/MSP, mowing, road salt, uniforms, engineering, software) pay ~$5–30k/yr for GovSpend/GovWin-class spend databases. The rest guess who buys what, from whom, and when the contract renews.
+- Why now: OhioCheckbook.com posts line-level payments for the state and for hundreds of opted-in local governments, a level of detail few states match. LLMs can now merge vendor-name variants, sort free-text payment memos into categories (NIGP-style) and spot each entity's renewal month. That cleanup used to be the costly part of any spend-data product.
+- Edge: An Ohio-specific transparency asset, plus data-joining and the versioned-catalog skill (quarterly editions). SW Ohio's dense mix of townships, villages and districts is familiar ground.
+- Silent test: Pre-check: Checkbook's export terms allow reuse, and ≥150 SW Ohio local entities are in the data; otherwise stop. Publish 10 free teaser pages (e.g., "Who SW Ohio townships paid for IT, 2024–26: top 15 vendors") with $99 category reports and a $49/mo explorer. Pass: ≥3 paid reports or ≥1 subscription in 45 days. Fail: 0 paid with ≥400 visits.
+- First $: $99 category report (spend by entity, incumbent vendor, typical renewal month, 3-year trend). ~21–45 days.
+- Flags: Leave out payments to individuals (employees, refunds, sole proprietors trading under personal names). Use only the official exports, with no scraping, and link every figure to its source.
+- Unique: Closest is I-003 (bid-tab unit prices). This one differs in resource (checkbook payment ledgers, not bid tabulations), customer (vendors' sales teams, not estimators) and mechanism (account and incumbent intelligence, not cost data).
+- Tags: customer=small B2G vendors selling into Ohio local government · mechanism=spend-intelligence reports + subscription · resource=Ohio Checkbook + AI entity resolution
+- Score (1-5): speed 3 · early 4 · fit 4 · ceiling 4
+
+### I-046 · New bar & restaurant feed from Ohio liquor-permit notices
+- Money now flows to: Vendors that need to reach a restaurant 30–90 days before it opens pay $100–300/mo for national "new business" lead lists, which are stale and thin on SW Ohio, or send reps to drive around looking for "coming soon" signs. These include POS resellers, linen and uniform services, kitchen-equipment dealers, grease-trap and pest-control firms, distributor reps and insurance agents.
+- Why now: The Division of Liquor Control notifies the local council or township trustees of every new or transferred permit (D-5, D-1/D-2, C-1/C-2), and they have 30 days to object. Each notice shows up as a dated item in a public agenda PDF, and the Division's permit search shows its status. AI can now read dozens of agenda packets a week and match each notice to a commercial build-out permit. New and expanded DORAs (outdoor drinking districts) in Hamilton, Middletown, Fairfield and Mason keep openings coming.
+- Edge: Local geography (the council and trustee agenda pages of Butler, Hamilton, Warren and Montgomery jurisdictions), a Claude Code agenda parser and a weekly versioned feed.
+- Silent test: Publish a free monthly "New SW Ohio bar & restaurant permits, Nov 2026" page showing half the rows, plus a $29/mo full weekly CSV/email feed. Pass: ≥3 subscribers in 45 days. Fail: 0 with ≥300 visits.
+- First $: $29/mo feed (business/dba, address, permit class, filing date, council date, matched build-out permit). ~21–45 days.
+- Flags: Business names only, never individual applicants or principals. Read public agendas and the Division's public search at polite rates, or request records through public-records web forms. Nothing alcoholic is sold, so liquor rules don't apply.
+- Unique: Closest is I-005 (SW Ohio catalog built from local-government pages). This one differs in mechanism (event-triggered B2B lead feed, not a requirements catalog), resource (liquor-permit notices in council agendas) and customer (vendors to new restaurants).
+- Tags: customer=vendors selling to new restaurants/bars · mechanism=public-filing lead-feed subscription · resource=Ohio liquor-permit notices + council agendas + building permits
+- Score (1-5): speed 4 · early 3 · fit 3 · ceiling 3
+
+### I-047 · Ohio small-business electric contract checkup
+- Money now flows to: Small commercial accounts in Duke Energy Ohio and AES Ohio territory (restaurants, churches, small offices, shops) sign supplier contracts through brokers, who often bury a 0.3–1.5¢/kWh fee in the rate. Many of these contracts roll into variable rates at term end, and some "fixed" contracts have added capacity pass-through charges since PJM's capacity price spike.
+- Why now: PJM capacity costs have reached the utilities' default-service prices and supplier offers in 2025–26, so contracts renewing in 2027 face a sharp step up. PUCO publishes the default price to compare and every supplier's offers ("Apples to Apples"). A vision LLM can pull rate, term, renewal date, early-termination fee and pass-through clauses from a bill and contract PDF in seconds.
+- Edge: Ohio's retail-choice rules and local utility territories. The PJM research overlaps with I-004 if both run, and the brief's Bayesian method can estimate the next price-to-compare reset. Taking no commissions makes the advice unconflicted.
+- Silent test: Free "Ohio price-to-compare tracker" page (Duke/AES history plus the next reset) and a $39 checkup. Pass: ≥5 paid in 60 days with ≥500 visits. Fail: <2 paid.
+- First $: $39 per account: contract terms extracted, cost compared with default service and the 3 best fixed offers, renewal and cancel-by dates as calendar events, red-flag clauses. $99 for up to 5 accounts. ~30–60 days.
+- Flags: legal review. PUCO certifies brokers and aggregators, so stay advisory: no supplier payments, no arranging contracts, no legal advice on contract terms. Buyers upload only their own bill; delete it after delivery.
+- Unique: Closest is I-004 (PJM peak alerts). This one differs in mechanism (a one-off contract audit, not operational alerts), customer (small commercial accounts, not large sites with capacity tags) and resource (PUCO Apples-to-Apples data + the buyer's own bill and contract).
+- Tags: customer=Ohio small commercial electricity accounts · mechanism=document audit + market benchmark · resource=PUCO retail-choice data + vision LLM
+- Score (1-5): speed 3 · early 4 · fit 3 · ceiling 3
+
+### I-048 · Ohio solar & storage land-offer benchmark
+- Money now flows to: Farmland owners in SW and west-central Ohio (Preble, Darke, Clinton, Greene, Clark, Madison, Fayette) are getting option and lease offers from solar and battery developers. They pay attorneys $1.5–5k to review them, or sign at the landman's first rent ($600–1,200/acre/yr) without knowing local comparables, who pays CAUV recoupment, or whether their county bans the project.
+- Why now: Data-center load and PJM's capacity spike have developers hunting for sites near substations with spare capacity. SB 52 (2021) lets counties ban utility-scale solar in some or all townships, and many have. OPSB dockets publish each project's acreage and total landowner payments, so $/acre can be worked out. PJM's queue lists projects by county and substation. LLMs can mine both in a day.
+- Edge: Ohio-specific rules: SB 52 restricted areas, CAUV recoupment when farmland converts, and drainage-tile repair (a big issue on Ohio farms). Local geography, and a versioned catalog of county status and project payments.
+- Silent test: Publish free county pages ("Solar leasing in [county], Ohio: bans, queued projects, typical rent") for ~15 counties, with a $49 report. Pass: ≥4 paid in 60 days. Fail: <1 paid with ≥500 visits.
+- First $: $49 report for the buyer's area: county and township ban status, queued projects and substations within 10 mi, $/acre range from OPSB filings, and a 25-item clause checklist (CAUV recoupment, decommissioning bond, tile repair, crop damage). ~30–60 days.
+- Flags: legal review (real-property contracts). Not legal advice; take no attorney or developer referral fees. Leave out the participating landowners named in OPSB filings.
+- Unique: Closest is I-004 (also built on PJM data). This one differs in customer (rural landowners), mechanism (offer benchmark + clause checklist) and resource (OPSB dockets, SB 52 county resolutions and the PJM interconnection queue).
+- Tags: customer=Ohio farmland owners with energy-lease offers · mechanism=offer-benchmark report · resource=OPSB dockets + PJM queue + SB 52 county resolutions
+- Score (1-5): speed 2 · early 4 · fit 3 · ceiling 3
+
 ## Round log
 
 | Round | Lenses | Proposed | Accepted | Note |
 |---|---|---|---|---|
 | 1 | L1 stale flows · L2 free assets · L3 skills | 24 | 24 | All distinct; Sanborn used twice for different buyers |
 | 2 | L5 moat · L6 AI shovels | 16 | 16 | All distinct; Title II now anchors I-001, I-032, I-038 |
+| 2 | L4 local geography | 8 | 8 | All distinct; resumed after usage limit |
