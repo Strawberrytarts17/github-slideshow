@@ -36,4 +36,5 @@ Each round gets distinct lenses, and fresh agents get lenses not used before.
 | L9 | **Gap matrix.** Tabulate existing Tags (customer x mechanism x resource), find empty or thin cells, and fill the most promising ones. |
 | L10 | **Contrarian / unsexy.** Boring niches, physical–digital hybrids, tiny data products, ideas a typical brainstorm wouldn't produce. |
 | L11 | **Second-order effects.** What does mass AI adoption break or create (new chores, new trust gaps, new waste) that someone will pay to fix? |
+| L13 | **Untouched buyer worlds.** Start from a buyer group no card serves, find its money flowing to an outdated solution, then fit the brief's resources to it. |
 | L12 | **Saturation check.** Look for whole directions the list hasn't touched at all. If none remain, say so and add fewer cards. |
