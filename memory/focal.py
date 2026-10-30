@@ -19,11 +19,13 @@ Usage
   focal.look(at='ne')                # move onto a cell of the last grid (fovea: r/3 drill; periphery: saccade)
   focal.back(); focal.reset()        # previous fixation / screen centre
   focal.periphery()                  # 3×3 over the whole screen, low-res pixel stats: pick where to look
-  focal.read(frame=fx.frame)         # OCR inside the circle (reuse the frame = no extra shot)
+  focal.read(frame=fx.frame)         # OCR inside the circle (reuse the frame = no extra shot); with the
+                                     #   detect backend the cells already carry ui_detect's OCR text: don't re-OCR
   focal.read(want=['搜索'])           # fuzzy match inside the circle via screen_peek.peek
   focal.ask('这个图标是什么?')          # VLM on the crop only; context=True adds a thumbnail with the circle
-  focal.tap('ne')                    # tap a cell centre, bound to the fixation's frame (screen=)
-  focal.render()                     # PNG of circle + grid + scanpath -> path (the eye-tracker view)
+  focal.tap('ne')                    # tap a cell centre, bound to the fixation's frame (screen=); refuses
+                                     #   fixations older than TAP_MAX_AGE s (e.g. from an earlier turn)
+  focal.render()                     # PNG of circle + grid + scanpath -> temp/focal_view.png (eye-tracker view)
   focal.use('auto'|'onnx'|'detect'|'pixel'|fn)   # cell classifier; run focal.selfcheck() on device first
 
 Reading a cell
@@ -51,7 +53,6 @@ import json
 import math
 import os
 import re
-import tempfile
 import time
 from dataclasses import dataclass, field
 from types import SimpleNamespace
@@ -64,7 +65,9 @@ TRAIL = 16          # fixations kept for back() and the rendered scanpath
 FIT_MIN = 0.15      # detect: a box must cover >= 15% of a cell, or have its centre in it
 MIN_CONF = 0.4      # onnx: below this the cell keeps the pixel label
 ASK_MIN_SIDE = 256  # ask(): upscale tiny crops so the VLM can see them (~88 tok)
+TAP_MAX_AGE = 10    # tap(): seconds a fixation stays tappable (turns take >15 s, screens move)
 MODEL_REL = os.path.join('models', 'focal_cls_v1', 'model.onnx')
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')  # agent root: memory/ models/ temp/
 
 S = SimpleNamespace(gaze=None, wh=None, rot=None, trail=[], last=None, hooks=[],
                     backend='auto', opts={}, onnx=None, onnx_err=None, err=None)
@@ -270,6 +273,7 @@ class Fixation:
     ms: int
     note: str = ''
     frame: dict = field(default=None, repr=False)
+    t: float = 0.0          # time.time() of the fixation
 
     def cell(self, name):
         return self.cells[CELLS.index(name)]
@@ -449,8 +453,7 @@ class _Onnx:
 
 
 def _find_model():
-    here = os.path.dirname(os.path.abspath(__file__))
-    for p in (os.environ.get('FOCAL_MODEL'), os.path.join(here, '..', MODEL_REL), MODEL_REL):
+    for p in (os.environ.get('FOCAL_MODEL'), os.path.join(ROOT, MODEL_REL), MODEL_REL):
         if p and os.path.isfile(p):
             return os.path.normpath(p)
     return None
@@ -527,7 +530,7 @@ def look(at=None, r=None, frame=None, backend=None):
     x, y, rr = _clamp(*S.gaze, w, h)
     rect = (x - rr, y - rr, x + rr, y + rr)
     cells, name, ms = _grid(f['image'], rect, backend)
-    S.last = Fixation('focal', x, y, rr, rect, cells, name, ms, note, f)
+    S.last = Fixation('focal', x, y, rr, rect, cells, name, ms, note, f, time.time())
     return S.last
 
 
@@ -537,7 +540,7 @@ def periphery(frame=None, backend='pixel', stride=4):
     note = _bind(f)
     h, w = f['image'].shape[:2]
     cells, name, ms = _grid(f['image'], (0, 0, w, h), backend, stride)
-    S.last = Fixation('periphery', w // 2, h // 2, max(w, h) // 2, (0, 0, w, h), cells, name, ms, note, f)
+    S.last = Fixation('periphery', w // 2, h // 2, max(w, h) // 2, (0, 0, w, h), cells, name, ms, note, f, time.time())
     return S.last
 
 
@@ -610,6 +613,9 @@ def tap(cell='c', fx=None):
     fx = fx or S.last
     if fx is None:
         raise RuntimeError('no fixation yet: call focal.look() first')
+    age = time.time() - fx.t
+    if age > TAP_MAX_AGE:
+        raise RuntimeError(f'fixation is {age:.0f}s old: focal.look() again before tapping')
     x, y = fx.cell(cell).xy
     d = _need('droid')
     screen = (fx.frame or {}).get('screen')
@@ -637,7 +643,9 @@ def render(path=None, fx=None):
     if fx.kind == 'focal':
         _ring(img, fx.x, fx.y, fx.r, (0, 0, 255), max(3, fx.r // 40))
         _ring(img, fx.x, fx.y, 3, (0, 0, 255), 4)
-    path = path or os.path.join(tempfile.gettempdir(), 'focal_view.png')
+    if path is None:  # vision rule: never the project root; agent temp/, fixed name, overwritten
+        os.makedirs(os.path.join(ROOT, 'temp'), exist_ok=True)
+        path = os.path.normpath(os.path.join(ROOT, 'temp', 'focal_view.png'))
     cv2 = _mod('cv2')
     if cv2 is not None:
         cv2.imwrite(path, img)

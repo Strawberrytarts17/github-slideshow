@@ -283,6 +283,11 @@ def test_tap_uses_cell_centre_and_frame_screen(monkeypatch):
     focal.look(frame=white())
     focal.tap()
     assert d.calls[-1] == (360, 700, {})
+    now = focal.time.time()
+    monkeypatch.setattr(focal.time, 'time', lambda: now + focal.TAP_MAX_AGE + 5)
+    with pytest.raises(RuntimeError, match='look'):
+        focal.tap()  # a fixation from an earlier turn is not tappable
+    assert len(d.calls) == 2
 
 
 def test_capture_retries_only_the_transient(monkeypatch):
@@ -315,6 +320,13 @@ def test_render_draws_circle_grid_and_scanpath(tmp_path):
     assert tuple(px[1000, 500 + 120]) == (255, 0, 0)    # red ring at radius r (RGB on disk)
     assert tuple(px[fx.rect[1], 450]) == (255, 200, 0)  # grid line
     assert tuple(px[650, 350]) == (0, 128, 255)         # scanpath midpoint between fixations
+
+
+def test_render_default_path_is_agent_temp_not_cwd(tmp_path, monkeypatch):
+    monkeypatch.setattr(focal, 'ROOT', str(tmp_path))
+    monkeypatch.chdir(tmp_path / '..')
+    focal.look(frame=white())
+    assert focal.render() == str(tmp_path / 'temp' / 'focal_view.png')
 
 
 def test_est_tokens_matches_vision_sop():
