@@ -120,6 +120,57 @@ aspect ratio then fails at runtime. `export/export_onnx.py` patches it.
   Tests check the embedded graph against it on three screen shapes and three
   threshold settings.
 
+## Cutting VLM calls and image tokens (`runtime/vlm_gate.py`)
+
+Image tokens scale with pixel area on essentially every VLM. So the biggest
+savings come from not sending an image at all; a classifier is the fourth
+lever, not the first. Each call to `route()` picks the cheapest tier:
+
+| tier | when | sends |
+|---|---|---|
+| `RECAPTURE` | two grabs ~150 ms apart differ (`is_stable`), i.e. the screen is mid-transition | nothing; grab again |
+| `LOCAL` | count / presence questions, or a label lookup with OCR labels present | nothing |
+| cache hit | same package + question, dHash within 4 bits (status bar excluded so the clock doesn't bust it) | nothing |
+| `TEXT_LLM` | ≥ 50% of elements carry a label (or the router says text is enough) | `digest()`: ~30 chars per element |
+| `VLM_CROP` | visual questions, or a digest without enough text | `crop_for()` of the relevant boxes (e.g. the Dialog), long side 768, numbered marks |
+| `VLM_FULL` | < 3 elements detected (self-drawn UI) | whole screen, downscaled, numbered marks |
+| `BLOCK` | sensitive screen | nothing leaves the device; local tiers still answer |
+
+Implementation rules:
+- **Set-of-marks.** Draw numbered boxes (`set_of_marks`) before downscaling,
+  and ask the VLM for a mark id. Coordinates come from the detector, so the
+  "no coords from the VLM" rule holds by construction.
+- **Batch questions per frame.** One image with several questions beats
+  several calls that each resend the image.
+- **Keep static instructions first in the prompt**, so provider-side prompt
+  caching can apply where it exists.
+- **Log the provider's reported input-token count per call and per tier.**
+  That's the ground truth for savings; don't trust estimates, including the
+  ones above.
+
+Where classifiers fit, in build order:
+1. **Learned router** (`Router`: numpy logistic regression over `features()`,
+   weights stored as JSON).
+   - Shadow mode first: on every VLM call, also run `TEXT_LLM` on the digest.
+   - Label each call `1` if the two answers agree.
+   - Fit once you have ~500 logged calls. Raise `p_text` until the
+     disagreement rate is acceptable.
+2. **Screen-type head on the detector.** Global-average-pool the FPN outputs,
+   add a linear layer, and export it as a second ONNX output `screen_type`.
+   - It shares the backbone, so it costs about 0 ms.
+   - Train it after the detector, with the backbone frozen.
+   - Classes: loading/blank, dialog, keyboard-up, list/feed, form, media,
+     sensitive.
+   - Wiring: loading → `RECAPTURE`, sensitive → `BLOCK`, dialog → local
+     dismiss rules.
+   - Labels: have the VLM label a few thousand non-sensitive frames once.
+     Label sensitive frames by package/activity rules, never by sending them
+     to the cloud.
+3. **State classifier on crops** (Switch on/off, CheckBox checked, Tab
+   selected). It answers "is X on?" without a call.
+   - Labels come free from a11y `checked`/`selected` (B1).
+   - A colour/position rule on the crop may be enough before training anything.
+
 ## Provenance
 
 | item | used? | license | status |
@@ -140,7 +191,7 @@ aspect ratio then fails at runtime. `export/export_onnx.py` patches it.
 UI domain). That way no weight provenance is inherited at all. ImageNet init is
 an A/B worth running only if legal clears it.
 
-## Device-side asks (one session covers all of A)
+## Next device session (one sitting covers all of A)
 
 **A. Measurements.** Copy `l1det/` to the device. The `bench/RANDOM_*.onnx`
 files are random-weight models for timing only and must never ship.
@@ -157,7 +208,7 @@ files are random-weight models for timing only and must never ship.
    worth timing) vs inference.
 
 **B. `collect.py` changes.** Cheap now, impossible to backfill later.
-- Per box in `meta.jsonl`, record:
+- (B1) Per box in `meta.jsonl`, record:
   - raw a11y fields: `className`, `viewIdResourceName`, `clickable`,
     `checkable`, `checked`, `selected`, `enabled`, has-text, has-contentDescription,
     window type;
@@ -182,8 +233,11 @@ files are random-weight models for timing only and must never ship.
 
 ## Plan and gates
 
-1. **Done:** contract, glue, exporter, benchmark, eval, dataset prep; 26 tests
-   pass under py3.10 / numpy 1.26.2 / ORT 1.17.3.
+1. **Done:** contract, glue, exporter, benchmark, eval, dataset prep, VLM gate;
+   33 tests pass under py3.10 / numpy 1.26.2 / ORT 1.17.3.
+   The VLM gate also accepts the incumbent detector's output, so wire `route()`
+   in front of the cloud call and start shadow logging now. Refit the `Router`
+   after switching detectors, because its features change.
 2. **Gate — legal:** CLAY and Rico terms; random init vs ImageNet init.
 3. **Needs a GPU box** (this container has 4 vCPU and no GPU):
    - CLAY converter: Rico `unique_uis.tar.gz`, ~6 GB, is reachable.
@@ -206,6 +260,7 @@ files are random-weight models for timing only and must never ship.
 ```
 classes.txt                 19 classes, model index order
 runtime/ui_detect_l1.py     ships to device: NAMES, _yolo, L1Detector, letterbox, postprocess_raw
+runtime/vlm_gate.py         ships to device: route(), digest, set-of-marks, crop, dHash cache, Router
 export/export_onnx.py       NanoDet checkpoint -> ONNX contract (off-box, torch)
 tools/bench_onnx.py         latency (device-safe)
 tools/eval_ap.py            per-class AP50 / AP50:95 / recall + confusions (device-safe)
